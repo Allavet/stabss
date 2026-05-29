@@ -1,0 +1,70 @@
+:root {
+  /* Stockholm stad-inspirerad palett */
+  --sthlm-blue: #0058a3;
+  --sthlm-blue-dark: #003d77;
+  --sthlm-blue-light: #e6f0f8;
+  --sthlm-yellow: #fcbc19;
+  --sthlm-ink: #181818;
+  --sthlm-muted: #4f5b66;
+  --sthlm-line: #d8dde2;
+  --sthlm-bg: #f6f4ef;
+  --sthlm-surface: #ffffff;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Helvetica Neue', 'Arial', 'Segoe UI', sans-serif;
+  color: var(--sthlm-ink);
+  background: var(--sthlm-bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--sthlm-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--sthlm-blue-dark);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5em;
+  color: var(--sthlm-ink);
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+p {
+  margin: 0 0 0.75em;
+}
