@@ -31,6 +31,7 @@ const BACKEND_TO_REACT = {
   strMoteslank: 'moteslank',
   strMeddelande: 'innehall',
   strMeddelandeExtra: 'ovrigt',
+  strTolkanvandare: 'tolkanvandare',
   strMetod: 'tolkmetod',
 }
 
@@ -71,6 +72,8 @@ function buildPayload(form) {
     .join('\n\n')
 
   return {
+    strID: form.inkopsordernummer,
+    ss_confirmed: true,
     strTypavmote: form.motestyp === 'plats' ? 'paplats' : 'distans',
     strBestallarensNamn: form.namn,
     strBestallarensMobil: form.telefon,
@@ -86,7 +89,7 @@ function buildPayload(form) {
     strMeddelande: meddelandeBlock,
     strMeddelandeExtra: form.ovrigt,
     strMetod: metod ? metod.id : '',
-    strTolkanvandare: '',
+    strTolkanvandare: form.tolkanvandare,
     strFakturaForetag: form.forvaltning,
     strFakturaOrg: '',
     strFakturaAdress: '',
@@ -111,6 +114,7 @@ const initialState = {
   platsinfo: '',
   plattform: '',
   moteslank: '',
+  tolkanvandare: '',
   deltagare: '',
   innehall: '',
   ovrigt: '',
@@ -124,7 +128,11 @@ const initialState = {
 function isDebugMode() {
   if (typeof window === 'undefined') return false
   const params = new URLSearchParams(window.location.search)
-  return params.get('debugtest') === 'true' || params.get('debug') === 'true'
+  return (
+    params.get('debugtest') === 'true' ||
+    params.get('debug') === 'true' ||
+    params.get('dev') === 'true'
+  )
 }
 
 function getInitialState() {
@@ -143,6 +151,7 @@ function getInitialState() {
     adress: 'Sveavägen 1',
     ort: 'Stockholm',
     platsinfo: 'Plan 3, rum 305',
+    tolkanvandare: 'Erik Eriksson',
     deltagare: 'Anna Andersson (beställare), Erik Eriksson',
     innehall: 'Genomgång av nytt ärende. Testdata via ?debugtest=true.',
     ovrigt: 'Inga särskilda önskemål.',
@@ -161,6 +170,7 @@ const FIELD_LABELS = {
   adress: 'Adress',
   ort: 'Ort',
   plattform: 'Plattform',
+  tolkanvandare: 'Tolkanvändare',
   sprakVal: 'Språk',
   sprakAnnat: 'Annat språk',
 }
@@ -201,6 +211,8 @@ function validate(form) {
   } else {
     req('plattform', 'Ange plattform (t.ex. Zoom eller Teams)')
   }
+
+  req('tolkanvandare', 'Ange vem som ska använda tolken')
 
   if (form.annatSprak === 'ja') {
     if (!form.sprakVal) {
@@ -390,13 +402,13 @@ export default function App() {
             <span className="partner-badge__icon-wrap" aria-hidden="true">
               <img
                 className="partner-badge__icon"
-                src="https://cdn.hyff.com/assets/logos/customer/stab.png"
+                src={`${import.meta.env.BASE_URL}stab.png`}
                 alt=""
               />
             </span>
             <div className="partner-badge__text">
               <span>I samarbete mellan</span>
-              <strong>Stockholmstolkarna &amp; Stockholm stad</strong>
+              <strong>Stockholmstolkarna &amp; Stockholms stad</strong>
             </div>
           </div>
         </div>
@@ -707,6 +719,20 @@ export default function App() {
               title="Beskrivning"
               description="Beskriv mötets sammanhang så att tolken kan förbereda sig."
             >
+              <Field
+                label="Tolkanvändare"
+                hint="Vem ska använda tolken?"
+                required
+                error={errors.tolkanvandare}
+              >
+                <input
+                  type="text"
+                  name="tolkanvandare"
+                  value={form.tolkanvandare}
+                  onChange={update('tolkanvandare')}
+                  aria-invalid={!!errors.tolkanvandare}
+                />
+              </Field>
               <Field label="Deltagares namn och mötets syfte">
                 <textarea
                   rows="3"
